@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
 
 const RecipesCtx = createContext(null);
 
 export function RecipesProvider({ children }) {
-  const [recipes, setRecipes] = useState([]); // {id, name, description, items: [{name}]}
+  const [recipes, setRecipes] = useState([]); 
 
   const createRecipe = ({ name, description }) => {
     const id = `rcp-${Date.now()}-${Math.random().toString(36).slice(2, 5)}`;
@@ -26,7 +26,6 @@ export function RecipesProvider({ children }) {
               ...r,
               items: [
                 ...r.items,
-                // prevent duplicates by normalized name
                 ...itemsToAdd.filter(
                   (it) => !r.items.some((e) => e.name.trim().toLowerCase() === it.name.trim().toLowerCase())
                 ),

@@ -1,5 +1,3 @@
-// Helps us move between tabs
-import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SettingsScreen from '../screens/SettingsScreen';
 import FoldersTab from '../tabs/FoldersTab';
