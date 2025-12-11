@@ -35,10 +35,6 @@ export default function TutorialOverlay() {
   })();
 
   // Placement that never blocks key UI:
-  // - Folders: a bit under the "Go to Folder" button.
-  // - Recipes (createRecipe step): top-left, below tab bar so FAB stays free.
-  // - Settings: bottom-left (few CTAs).
-  // - addItemsToRecipe: top-left on detail screens (Add buttons row stays clear; overlay hides in modals).
   const containerPos = { position: 'absolute', left: 0, right: undefined };
 
   if (currentScreen === 'Folders') {
