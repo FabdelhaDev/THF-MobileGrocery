@@ -1,8 +1,10 @@
-export default function Folder({ id, name, description = '', lists = [] }) {
+export default function Folder({ id, name, description = '', lists = [], image = null }) {
   return {
-    id, 
+    id,
     name,
     description,
-    lists, 
+    lists,
+    image,
   };
 }
+
