@@ -2,7 +2,7 @@ import axios from "axios";
 
 //import { FIREBASE_API_KEY } from "@env";
 
-const FIREBASE_API_KEY = "AIzaSyAJddV06EFtftD6VJDp0sInsbOA-nFFx3o"; // Replace with your actual API key
+const FIREBASE_API_KEY = ""; // Replace with your actual API key
 
 async function authenticate(mode, email, password) {
   const url = "https://identitytoolkit.googleapis.com/v1/accounts:" + mode + "?key=" + FIREBASE_API_KEY;
