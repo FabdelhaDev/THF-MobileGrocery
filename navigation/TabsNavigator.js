@@ -3,6 +3,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import FoldersTab from '../tabs/FoldersTab';
 import RecipesTab from '../tabs/RecipesTab';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import TutorialOverlay from '../components/TutorialOverlay';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -14,6 +15,7 @@ export default function TabsNavigator() {
         <Tab.Screen name="Recipes" component={RecipesTab} />
         <Tab.Screen name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
+      <TutorialOverlay />
     </SafeAreaView>
   );
 }
