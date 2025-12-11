@@ -1,15 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Pressable,
-  Text,
-  View,
-  Modal,
-  TextInput,
-  Platform,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { useMemo, useState } from 'react';
+import { KeyboardAvoidingView, Pressable, Text, View, Modal, TextInput, Platform, ScrollView, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';

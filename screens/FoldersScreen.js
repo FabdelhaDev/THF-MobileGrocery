@@ -1,16 +1,5 @@
 import React, { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  FlatList,
-  Pressable,
-  Text,
-  View,
-  Modal,
-  TextInput,
-  Platform,
-  ScrollView,
-  Image,
-} from 'react-native';
+import { KeyboardAvoidingView, FlatList, Pressable, Text, View, Modal, TextInput, Platform, ScrollView, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';

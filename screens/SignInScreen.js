@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Text, TouchableOpacity, View, TextInput, Alert } from 'react-native';
 
 export default function SignInScreen({ navigation }) {
