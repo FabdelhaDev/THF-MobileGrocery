@@ -17,12 +17,8 @@ const firebaseConfig = {
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
 };
 
-<<<<<<< HEAD
-// 1. Initialize App
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-=======
-const FIREBASE_API_KEY = ""; // Replace with your actual API key
->>>>>>> e5a4d9cf152571a04c67cd73a1bffd9b05926f76
+
 
 // 2. Initialize Auth with Persistence (Singleton Pattern)
 // We only initialize once to prevent the 'Auth already initialized' crash
