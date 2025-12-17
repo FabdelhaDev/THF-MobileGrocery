@@ -1,11 +1,5 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { 
-  initializeAuth, 
-  getReactNativePersistence, 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword,
-  getAuth 
-} from "firebase/auth";
+import { initializeApp, getApps, getApp, } from "firebase/app";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const firebaseConfig = {
@@ -19,18 +13,37 @@ const firebaseConfig = {
 
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-
 // 2. Initialize Auth with Persistence (Singleton Pattern)
 // We only initialize once to prevent the 'Auth already initialized' crash
-let auth;
-try {
-  auth = getAuth(app);
-} catch (e) {
-  auth = initializeAuth(app, {
+let authInstance;
+if (getApps().length > 0) {
+  // If app already exists, retrieve the existing auth instance
+  authInstance = getAuth(app);
+} else {
+  // If this is the first load, initialize with AsyncStorage
+  authInstance  = initializeAuth(app, {
     persistence: getReactNativePersistence(AsyncStorage),
   });
 }
+
+export const auth = authInstance;
+
 // 3. Export Helper Functions using the auth instance
+export const login = async (email, password) => {
+  console.log("Login attempt started for:", email); // if this is not logged, then the login is not working and problem will be in the UI/AuthContent.js file
+  try {
+    const authInstance = auth || require('firebase/auth').getAuth(app);
+    const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
+    return userCredential.user;
+  } catch (error) {
+    // CRITICAL: Log the error CODE to find the 2025 security policy causing this
+    console.error("Firebase Login Error Code:", error.code); 
+    console.error("Firebase Login Error Message:", String(error.message));
+    throw error;
+  }
+};
+
+/*  old login helper function
 export const login = async (email, password) => {
   try {
     // Note: if auth is null (due to hot reload), we get it from getAuth
@@ -43,6 +56,7 @@ export const login = async (email, password) => {
     throw error;
   }
 };
+*/
 
 export const createUser = async (email, password) => {
   try {
@@ -55,4 +69,4 @@ export const createUser = async (email, password) => {
   }
 };
 
-export { app, auth };
+export { app };
