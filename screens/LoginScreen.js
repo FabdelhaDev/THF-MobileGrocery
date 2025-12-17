@@ -2,6 +2,8 @@ import { useState } from "react";
 import AuthContent from "../components/Auth/AuthContent";
 import { login } from "../APIs/firebase";
 import LoadingOverlay from "../components/ui/LoadingOverlay";
+import { Alert } from "react-native";
+
 
 function LoginScreen() {
 
@@ -9,14 +11,20 @@ function LoginScreen() {
 
   async function loginHandler({ email, password }) {
     setIsAuthenticating(true);
-    await login(email, password);
-    setIsAuthenticating(false);
+    try {
+      await login(email, password);
+    } catch (error) {
+      Alert.alert(
+        "Authentication failed!",
+        error.message || "Could not log you in. Please check your credentials or try again later!");
+    } finally {
+      setIsAuthenticating(false);
+    }
   }
 
-  if (isAuthenticating) {
+  if (isAuthenticating === true) {
     return <LoadingOverlay message="Logging in..." />;
   }
-
 
   return <AuthContent isLogin = {true} onAuthenticate={loginHandler}/>;
 }

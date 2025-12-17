@@ -1,39 +1,59 @@
-import axios from "axios";
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { 
+  initializeAuth, 
+  getReactNativePersistence, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword,
+  getAuth 
+} from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-//import { FIREBASE_API_KEY } from "@env";
+const firebaseConfig = {
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: `${process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID}.firebaseapp.com`,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+};
 
-const FIREBASE_API_KEY = "AIzaSyAJddV06EFtftD6VJDp0sInsbOA-nFFx3o"; // Replace with your actual API key
+// 1. Initialize App
+const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 
-async function authenticate(mode, email, password) {
-  const url = "https://identitytoolkit.googleapis.com/v1/accounts:" + mode + "?key=" + FIREBASE_API_KEY;
-
-    try {
-    const response = await axios.post(
-      url,
-      { 
-        email: email,
-        password: password,
-        returnSecureToken: true 
-        }
-    )
-    console.log(response.data);
-}
-    catch (error) {
-        console.log("Error during authentication:");
-        console.log(error);
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.config);
-    }
-}
-
-export async function createUser(email, password) {
-  await authenticate("signUp", email, password);
-}
-
-export async function login(email, password) {
-  await authenticate("signInWithPassword", email, password);
+// 2. Initialize Auth with Persistence (Singleton Pattern)
+// We only initialize once to prevent the 'Auth already initialized' crash
+let auth;
+if (getApps().length > 0) {
+  auth = getAuth(app);
+} else {
+  auth = initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
 }
 
+// 3. Export Helper Functions using the auth instance
+export const login = async (email, password) => {
+  try {
+    // Note: if auth is null (due to hot reload), we get it from getAuth
+    const authInstance = auth || require('firebase/auth').getAuth(app);
+    const userCredential = await signInWithEmailAndPassword(authInstance, email, password);
+    return userCredential.user;
+  } catch (error) {
+    // FIX: String conversion prevents HostFunction 'boolean' crash
+    console.error("Login Error:", String(error.message));
+    throw error;
+  }
+};
 
+export const createUser = async (email, password) => {
+  try {
+    const authInstance = auth || require('firebase/auth').getAuth(app);
+    const userCredential = await createUserWithEmailAndPassword(authInstance, email, password);
+    return userCredential.user;
+  } catch (error) {
+    console.error("Signup Error:", String(error.message));
+    throw error;
+  }
+};
 
+export { app, auth };

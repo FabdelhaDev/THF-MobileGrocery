@@ -1,6 +1,9 @@
-import {Stylesheet, Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 
 function WelcomeScreen() {  
+    
+    console.log("WelcomeScreen is rendering!");
+
     return (
         <View style={styles.rootcontainer}>
             <Text style={styles.title}>You have successfully authenticated... Welcome to Grocery App!</Text>
@@ -11,7 +14,7 @@ function WelcomeScreen() {
 
 export default WelcomeScreen;
 
-const styles = Stylesheet.create({
+const styles = StyleSheet.create({
     rootcontainer: {
         flex: 1,
         justifyContent: 'center',
