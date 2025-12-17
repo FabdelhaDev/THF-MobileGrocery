@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import TabsNavigator from './navigation/TabsNavigator';
 import LoadingOverlay from './components/ui/LoadingOverlay'; 
 import LoginScreen from './screens/LoginScreen';
@@ -11,15 +12,38 @@ import ItemScreen from './screens/ItemScreen';
 import RecipeDetailScreen from './screens/RecipeDetailScreen';
 import { Colors } from './constants/styles';
 import WelcomeScreen from './screens/WelcomeScreen';
-import { FoldersProvider } from './context/FoldersContext';
+import { FoldersProvider, useFolders } from './context/FoldersContext';
 import { RecipesProvider } from './context/RecipesContext';
+import { TutorialProvider, useTutorial } from './context/TutorialContext';
+import { UiProvider } from './context/UiContext';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { AuthContext, AuthProvider } from './context/AuthContext'; 
 
 const Stack = createStackNavigator();
 
+// Seeds one simple default set when tutorial is completed and the app is empty.
+// helps new users understand structure if they skipped the tutorial is what i think
+function SeedDefaultsOnce() {
+  const { folders, addFolder, createListInFolder, addItemToList } = useFolders();
+  const { state } = useTutorial();
+
+  useEffect(() => {
+    const tutorialIsDone = state.currentStep === 'done';
+    const isEmpty = folders.length === 0;
+    if (tutorialIsDone && isEmpty) {
+      const folderId = addFolder({ name: 'Household', description: 'Starter folder' });
+      const listId = createListInFolder(folderId, { name: 'Groceries', description: 'Basics' });
+      addItemToList(folderId, listId, { name: 'Milk' });
+      addItemToList(folderId, listId, { name: 'Eggs' });
+      addItemToList(folderId, listId, { name: 'Bread' });
+    }
+  }, [state.currentStep]); // runs when tutorial transitions to "done"
+
+  return null;
+}
+
 export function AppStack() {
-  const { userToken, tryLocalLogin } = useContext(AuthContext); 
+  const { state: authState, tryLocalLogin } = useContext(AuthContext); 
   const [isTryingLogin, setIsTryingLogin] = useState(true); 
 
   useEffect(() => {
@@ -48,7 +72,7 @@ export function AppStack() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={screenOptions}>
-        {userToken == null ? (
+        {authState.token == null ? (
           // Show Auth Screens if logged out
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
@@ -73,14 +97,20 @@ export function AppStack() {
 export default function App() {
   return (
     <AuthProvider>
-      <FoldersProvider>
-      <RecipesProvider>
-        <PaperProvider>
-          {/*AppStack component manages all navigation */}
-          <AppStack />
-        </PaperProvider>
-      </RecipesProvider>
-    </FoldersProvider>
+      <UiProvider>
+        <TutorialProvider>
+          <FoldersProvider>
+            <RecipesProvider>
+              <PaperProvider>
+                {/*AppStack component manages all navigation */}
+                <AppStack />
+                {/* Seed defaults after tutorial completion */}
+                <SeedDefaultsOnce />
+              </PaperProvider>
+            </RecipesProvider>
+          </FoldersProvider>
+        </TutorialProvider>
+      </UiProvider>
     </AuthProvider>
   );
 }

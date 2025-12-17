@@ -19,6 +19,7 @@
     "expo": "^54.0.29",
     "expo-auth-session": "~7.0.10",
     "expo-crypto": "~15.0.8",
+    "expo-image-picker": "^17.0.9",
     "expo-status-bar": "^3.0.9",
     "firebase": "^12.7.0",
     "react": "19.1.0",
@@ -30,8 +31,8 @@
     "react-native-screens": "~4.16.0"
   },
   "overrides": {
-  "expo-constants": "18.0.12"
-},
+    "expo-constants": "18.0.12"
+  },
   "private": true,
   "devDependencies": {
     "react-native-dotenv": "^3.4.11"
