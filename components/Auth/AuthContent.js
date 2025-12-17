@@ -50,7 +50,7 @@ function AuthContent({ isLogin, onAuthenticate }) {
     password = password.trim();
 
     const emailIsValid = email.includes('@');
-    const passwordIsValid = password.length > 16;   // Changed from 6 to 16 for stronger passwords per NIST guidelines 8 is minimum max is 64
+    const passwordIsValid = password.length > 15;   // Changed from 6 to 15 for stronger passwords per NIST guidelines 8 is minimum max is 64
     const emailsAreEqual = email === confirmEmail;
     const passwordsAreEqual = password === confirmPassword;
 
